@@ -6,6 +6,7 @@ import hello.myshop.biz.user.dto.UserResponse;
 import hello.myshop.biz.user.entity.User;
 import hello.myshop.biz.user.repository.jpa.UserJpaRepository;
 import hello.myshop.biz.user.service.UserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +27,7 @@ public class UserServiceIntegrationTest {
     @Test
     public void registerUser_SavesToDatabase() {
         // Given: 요청 데이터 생성
-        UserRequest userRequest = new UserRequest("testuser", "test@example.com", "password123", Role.ADMIN);
+        UserRequest userRequest = new UserRequest(1L, "testuser", "test@example.com", "password123", Role.ADMIN);
 
         // When: 회원 등록 서비스 호출
         Long userId = userService.register(userRequest);
@@ -38,10 +39,11 @@ public class UserServiceIntegrationTest {
         assertThat(savedUser.getEmail()).isEqualTo("test@example.com");
     }
 
+    @DisplayName("유저 상세 데이터 조회")
     @Test
     void getUser_SavesToDatabase() {
         // Given: 요청 데이터 생성
-        UserRequest userRequest = new UserRequest("testuser", "test@example.com", "password123", Role.ADMIN);
+        UserRequest userRequest = new UserRequest(1L, "testuser", "test@example.com", "password123", Role.ADMIN);
         Long userId = userService.register(userRequest);
 
 
@@ -53,4 +55,28 @@ public class UserServiceIntegrationTest {
         assertThat(user.getUsername()).isEqualTo("testuser");
         assertThat(user.getEmail()).isEqualTo("test@example.com");
     }
+
+    @DisplayName("유저 업데이트")
+    @Test
+    void updateUser_SavesToDatabase() {
+        //Given : 업데이트 정보
+        UserRequest userRequest = new UserRequest(1L, "testuser", "test@example.com", "password123", Role.ADMIN);
+        userService.register(userRequest);
+
+        //When : 유저 정보 업데이트
+
+        userRequest.setEmail("test1@example.com");
+        userRequest.setUsername("testupdate");
+        userRequest.setRole(Role.USER);
+        userService.updateUser(userRequest);
+
+        //Then : 유저 이름, 이메일, 역할을 바꿀 수 있다.
+        User savedUser = userRepository.findById(userRequest.getId()).orElse(null);
+        assertThat(savedUser).isNotNull();
+        assertThat(savedUser.getUsername()).isEqualTo("testupdate");
+        assertThat(savedUser.getEmail()).isEqualTo("test1@example.com");
+        assertThat(savedUser.getRole()).isEqualTo(Role.USER);
+    }
+
+
 }

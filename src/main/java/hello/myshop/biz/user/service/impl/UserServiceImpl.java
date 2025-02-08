@@ -34,4 +34,13 @@ public class UserServiceImpl implements UserService {
         }).orElseThrow(() -> new ResolutionException("User not Found"));
 
     }
+
+    @Override
+    public Void updateUser(UserRequest userRequest) {
+        User user = userJpaRepository.findById(userRequest.getId()).orElseThrow(
+                () -> new ResolutionException("User not Found")
+        );
+        user.update(userRequest);
+        return null;
+    }
 }

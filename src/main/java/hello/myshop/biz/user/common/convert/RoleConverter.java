@@ -20,6 +20,6 @@ public class RoleConverter implements AttributeConverter<Role, String> {
         if (dbData == null || dbData.isBlank()) {
             return null;
         }
-        return Role.fromValue(dbData); // DB 값으로 Enum 복원
+        return Role.from(dbData); // DB 값으로 Enum 복원
     }
 }

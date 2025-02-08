@@ -2,6 +2,8 @@ package hello.myshop.biz.user.entity;
 
 import hello.myshop.biz.user.common.constant.Role;
 import hello.myshop.biz.user.common.convert.RoleConverter;
+import hello.myshop.biz.user.dto.UserRequest;
+import hello.myshop.core.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,10 +12,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue
+    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false, length = 50)
@@ -29,5 +32,11 @@ public class User {
     @Convert(converter = RoleConverter.class)
     private Role role;
 
+
+    public void update(UserRequest request) {
+        this.username = request.getUsername();
+        this.email = request.getEmail();
+        this.role = request.getRole();
+    }
 
 }

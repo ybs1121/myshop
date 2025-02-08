@@ -8,6 +8,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class UserRequest {
 
+    private long id;
+
     private String username;
 
     private String email;

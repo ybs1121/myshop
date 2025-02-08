@@ -27,4 +27,9 @@ public class UserController {
         return ResponseUtil.success(userService.getUser(id));
     }
 
+    @PatchMapping("/profile")
+    public ResponseEntity<ApiResponse<Void>> updateProfile(@RequestBody UserRequest user) {
+        return ResponseUtil.success(userService.updateUser(user));
+    }
+
 }

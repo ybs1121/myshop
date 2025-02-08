@@ -28,18 +28,14 @@ public enum Role {
     }
 
     // 코드값으로 Enum 찾기
-    public static Role fromValue(String value) {
+    @JsonCreator
+    public static Role from(String value) {
         for (Role role : Role.values()) {
-            if (role.value.equals(value)) {
+            if (role.value.equalsIgnoreCase(value) || role.desc.equalsIgnoreCase(value)) {
                 return role;
             }
         }
         throw new IllegalArgumentException("Unknown Role value: " + value);
-    }
-
-    @JsonCreator
-    public static Role from(String value) {
-        return Role.fromValue(value);
     }
 
 

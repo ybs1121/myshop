@@ -8,4 +8,6 @@ public interface UserService {
     long register(UserRequest user);
 
     UserResponse getUser(long id);
+
+    Void updateUser( UserRequest user);
 }
