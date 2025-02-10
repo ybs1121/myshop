@@ -14,4 +14,8 @@ public class ResponseUtil {
     public static <T> ResponseEntity<ApiResponse<T>> error(String message, HttpStatus status) {
         return ResponseEntity.status(status).body(ApiResponse.fail(message));
     }
+
+    public static <T> ResponseEntity<ApiResponse<T>> error(String code, String message) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(code, message));
+    }
 }

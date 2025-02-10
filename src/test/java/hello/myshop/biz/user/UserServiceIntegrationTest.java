@@ -6,6 +6,7 @@ import hello.myshop.biz.user.dto.UserResponse;
 import hello.myshop.biz.user.entity.User;
 import hello.myshop.biz.user.repository.jpa.UserJpaRepository;
 import hello.myshop.biz.user.service.UserService;
+import hello.myshop.core.response.CustomException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 @SpringBootTest
 @Transactional // 테스트 종료 후 데이터 롤백
@@ -78,5 +82,17 @@ public class UserServiceIntegrationTest {
         assertThat(savedUser.getRole()).isEqualTo(Role.USER);
     }
 
+    @DisplayName("유저 찾기 실패 에러")
+    @Test
+    void getUser_Fail_USER0001() {
+        // GIVEN
+        Long userId = -1L;
 
+        // When
+        // Then
+        CustomException exception = assertThrows(CustomException.class,
+                () -> userService.getUser(userId));
+
+        assertEquals("USER0001", exception.getCode());
+    }
 }
