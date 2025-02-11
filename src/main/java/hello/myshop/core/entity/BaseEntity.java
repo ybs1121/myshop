@@ -30,9 +30,9 @@ public abstract class BaseEntity {
 
     @CreatedBy // 엔티티 생성자 저장 (AuditorAware 구현 필요)
     @Column(name = "created_by")
-    private String createdBy;
+    private Long createdBy;
 
     @Column(name = "modified_by")
     @LastModifiedBy // 엔티티 수정자 저장 (AuditorAware 구현 필요)
-    private String modifiedBy;
+    private Long modifiedBy;
 }

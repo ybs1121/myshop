@@ -1,11 +1,8 @@
 package hello.myshop.biz.products.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import hello.myshop.biz.products.dto.ProductRequest;
 import hello.myshop.biz.products.service.ProductService;
-import hello.myshop.biz.products.service.impl.ProductServiceImpl;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,7 +12,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -51,9 +47,10 @@ class ProductControllerTest {
     }
 
 
+
     private ProductRequest makeProductRequestSample() {
         ProductRequest productRequest = new ProductRequest();
-        productRequest.setUserId("tester");
+        productRequest.setUserId(1L);
         productRequest.setName("TV");
         productRequest.setDescription("엄청난 고화질의 티비");
         productRequest.setStock(100);

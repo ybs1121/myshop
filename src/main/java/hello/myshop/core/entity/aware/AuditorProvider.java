@@ -6,10 +6,10 @@ import org.springframework.data.domain.AuditorAware;
 import java.util.Optional;
 
 @Configuration
-public class AuditorProvider implements AuditorAware<String> {
+public class AuditorProvider implements AuditorAware<Long> {
     @Override
-    public Optional<String> getCurrentAuditor() {
+    public Optional<Long> getCurrentAuditor() {
         // todo :: 추후 자동으로 Set 할 수 있게 변경
-        return Optional.of("tester");
+        return Optional.of(1L);
     }
 }

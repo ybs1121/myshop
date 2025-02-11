@@ -65,10 +65,10 @@ public class UserServiceIntegrationTest {
     void updateUser_SavesToDatabase() {
         //Given : 업데이트 정보
         UserRequest userRequest = new UserRequest(1L, "testuser", "test@example.com", "password123", Role.ADMIN);
-        userService.register(userRequest);
+        long register = userService.register(userRequest);
 
         //When : 유저 정보 업데이트
-
+        userRequest.setId(register);
         userRequest.setEmail("test1@example.com");
         userRequest.setUsername("testupdate");
         userRequest.setRole(Role.USER);
@@ -89,9 +89,9 @@ public class UserServiceIntegrationTest {
         Long userId = -1L;
 
         // When
-        // Then
         CustomException exception = assertThrows(CustomException.class,
                 () -> userService.getUser(userId));
+        // Then
 
         assertEquals("USER0001", exception.getCode());
     }
