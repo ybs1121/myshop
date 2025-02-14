@@ -1,5 +1,6 @@
 package hello.myshop.biz.products.entity;
 
+import hello.myshop.biz.products.dto.ProductUpdate;
 import hello.myshop.core.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +33,14 @@ public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private Integer stock;
+
+
+    public void update(ProductUpdate productUpdate) {
+        this.name = productUpdate.getName();
+        this.description = productUpdate.getDescription();
+        this.price = productUpdate.getPrice();
+        this.stock = productUpdate.getStock();
+    }
 
 
 }
