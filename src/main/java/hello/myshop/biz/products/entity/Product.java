@@ -42,5 +42,9 @@ public class Product extends BaseEntity {
         this.stock = productUpdate.getStock();
     }
 
+    public void order(int qty) {
+        this.stock -= qty;
+    }
+
 
 }
