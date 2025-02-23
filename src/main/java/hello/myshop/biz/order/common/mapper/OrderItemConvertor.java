@@ -1,6 +1,7 @@
 package hello.myshop.biz.order.common.mapper;
 
 
+import hello.myshop.biz.order.dto.OrderItemResponse;
 import hello.myshop.biz.order.entity.Orders;
 import hello.myshop.biz.order.entity.OrderItem;
 import hello.myshop.biz.products.common.mapper.ProductConvertor;
@@ -22,11 +23,11 @@ public class OrderItemConvertor {
                 .build();
     }
 
-//    public CartItemResponse toResponse(CartItem cartItem) {
-//        return CartItemResponse.builder()
-//                .id(cartItem.getId())
-//                .quantity(cartItem.getQuantity())
-//                .product(productConvertor.toResponse(cartItem.getProduct()))
-//                .build();
-//    }
+    public OrderItemResponse toResponse(OrderItem orderItem) {
+        return OrderItemResponse.builder()
+                .id(orderItem.getId())
+                .quantity(orderItem.getQuantity())
+                .product(productConvertor.toResponse(orderItem.getProduct()))
+                .build();
+    }
 }

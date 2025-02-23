@@ -5,6 +5,7 @@ import hello.myshop.biz.order.common.mapper.OrderConvertor;
 import hello.myshop.biz.order.common.mapper.OrderItemConvertor;
 import hello.myshop.biz.order.dto.OrderItemRequest;
 import hello.myshop.biz.order.dto.OrderRequest;
+import hello.myshop.biz.order.dto.OrderResponse;
 import hello.myshop.biz.order.entity.Orders;
 import hello.myshop.biz.order.entity.OrderItem;
 import hello.myshop.biz.order.repository.OrderItemJpaRepository;
@@ -20,8 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -81,5 +84,38 @@ public class OrderServiceImpl implements OrderService {
         orderItemJpaRepository.saveAll(orderItemList);
 
         return orders.getId();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public OrderResponse.MainResponse getOrders(Long userId) {
+        List<Orders> orders = orderJpaRepository.findByUserId(userId);
+        List<Long> orderIds = orders.stream().map(Orders::getId).collect(Collectors.toList());
+        List<OrderItem> orderItems = orderItemJpaRepository.findByOrdersIdIn(orderIds);
+
+//        Map<Long, Orders> orderMap = orders.stream().collect(Collectors.toMap(
+//                Orders::getId, Function.identity()
+//        ));
+
+        Map<Long, List<OrderItem>> orderItemMap = orderItems.stream().collect(Collectors.groupingBy(
+                orderItem -> orderItem.getOrders().getId()
+        ));
+
+
+        List<OrderResponse> orderResponseList = orders.stream().map(
+                o -> {
+                    List<OrderItem> orderItemsByOrderId = orderItemMap.get(o.getId());
+
+                    OrderResponse orderResponse = orderConvertor.toResponse(o, orderItemsByOrderId.stream().map(oi -> orderItemConvertor.toResponse(oi))
+                            .collect(Collectors.toList()));
+                    return orderResponse;
+                }
+        ).collect(Collectors.toList());
+
+
+        return OrderResponse.MainResponse.builder()
+                .orderResponseList(orderResponseList)
+                .cnt(orders.size())
+                .build();
     }
 }

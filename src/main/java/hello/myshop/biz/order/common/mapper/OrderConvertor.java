@@ -2,6 +2,8 @@ package hello.myshop.biz.order.common.mapper;
 
 
 import hello.myshop.biz.order.common.constant.OrderStatus;
+import hello.myshop.biz.order.dto.OrderItemResponse;
+import hello.myshop.biz.order.dto.OrderResponse;
 import hello.myshop.biz.order.entity.Orders;
 import hello.myshop.biz.products.common.mapper.ProductConvertor;
 import hello.myshop.biz.user.entity.User;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -25,11 +28,13 @@ public class OrderConvertor {
                 .build();
     }
 
-//    public CartItemResponse toResponse(CartItem cartItem) {
-//        return CartItemResponse.builder()
-//                .id(cartItem.getId())
-//                .quantity(cartItem.getQuantity())
-//                .product(productConvertor.toResponse(cartItem.getProduct()))
-//                .build();
-//    }
+
+    public OrderResponse toResponse(Orders orders, List<OrderItemResponse> orderItemResponseList) {
+        return OrderResponse.builder()
+                .id(orders.getId())
+                .totalPrice(orders.getTotalPrice())
+                .orderStatus(orders.getOrderStatus())
+                .orderItems(orderItemResponseList)
+                .build();
+    }
 }

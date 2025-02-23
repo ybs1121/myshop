@@ -4,6 +4,7 @@ import hello.myshop.biz.cartitem.repository.CartItemJpaRepository;
 import hello.myshop.biz.order.common.constant.OrderStatus;
 import hello.myshop.biz.order.dto.OrderItemRequest;
 import hello.myshop.biz.order.dto.OrderRequest;
+import hello.myshop.biz.order.dto.OrderResponse;
 import hello.myshop.biz.order.entity.Orders;
 import hello.myshop.biz.order.entity.OrderItem;
 import hello.myshop.biz.order.repository.OrderItemJpaRepository;
@@ -129,5 +130,29 @@ class OrdersServiceIntegrationTest {
                 () -> orderService.order(orderRequest));
 
         Assertions.assertThat(customException.getCode()).isEqualTo("PROD0002");
+    }
+
+    @Test
+    void 주문_조회_성공_테스트() {
+        // Given
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setUserId(userId);
+        List<OrderItemRequest> orderItemRequestList = new ArrayList<>();
+        OrderItemRequest orderItemRequest = new OrderItemRequest();
+        orderItemRequest.setProductId(productId1);
+        orderItemRequest.setQuantity(1);
+        orderItemRequestList.add(orderItemRequest);
+        orderRequest.setOrderItemRequestList(orderItemRequestList);
+        orderService.order(orderRequest);
+
+        //When
+        OrderResponse.MainResponse orders = orderService.getOrders(orderRequest.getUserId());
+
+        //Then
+
+        Assertions.assertThat(orders.getCnt()).isEqualTo(1);
+        Assertions.assertThat(orders.getOrderResponseList().size()).isEqualTo(1);
+
+
     }
 }
