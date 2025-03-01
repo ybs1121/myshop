@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUser(long id) {
         return userJpaRepository.findById(id).map(user -> {
-            return userConvertor.toDto(user);
+            return userConvertor.toResponse(user);
         }).orElseThrow(() -> new CustomException("USER0001"));
 
     }

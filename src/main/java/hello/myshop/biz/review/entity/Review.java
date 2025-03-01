@@ -18,11 +18,11 @@ public class Review {
     @Column(name = "review_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -33,4 +33,9 @@ public class Review {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    public void modifyReview(String content, Integer rating) {
+        this.content = content;
+        this.rating = rating;
+
+    }
 }

@@ -19,7 +19,7 @@ public class UserConvertor {
     }
 
     //  Entity -> DTO 변환 (필요 시)
-    public UserResponse toDto(User user) {
+    public UserResponse toResponse(User user) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
         response.setUsername(user.getUsername());
