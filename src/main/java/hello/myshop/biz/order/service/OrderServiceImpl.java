@@ -4,12 +4,14 @@ import hello.myshop.biz.order.common.constant.OrderStatus;
 import hello.myshop.biz.order.common.mapper.OrderConvertor;
 import hello.myshop.biz.order.common.mapper.OrderItemConvertor;
 import hello.myshop.biz.order.dto.OrderItemRequest;
+import hello.myshop.biz.order.dto.OrderItemResponse;
 import hello.myshop.biz.order.dto.OrderRequest;
 import hello.myshop.biz.order.dto.OrderResponse;
 import hello.myshop.biz.order.entity.Orders;
 import hello.myshop.biz.order.entity.OrderItem;
 import hello.myshop.biz.order.repository.OrderItemJpaRepository;
 import hello.myshop.biz.order.repository.OrderJpaRepository;
+import hello.myshop.biz.order.repository.OrderQueryRepository;
 import hello.myshop.biz.products.entity.Product;
 import hello.myshop.biz.products.repository.ProductJpaRepository;
 import hello.myshop.biz.user.entity.User;
@@ -39,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     private final ProductJpaRepository productJpaRepository;
     private final OrderConvertor orderConvertor;
     private final OrderItemConvertor orderItemConvertor;
-
+    private final OrderQueryRepository queryRepository;
 
     @Override
     public long order(OrderRequest request) {
@@ -117,5 +119,11 @@ public class OrderServiceImpl implements OrderService {
                 .orderResponseList(orderResponseList)
                 .cnt(orders.size())
                 .build();
+    }
+
+    @Override
+    public OrderItemResponse.ListResponse getOrdersV2(Long userId) {
+        return queryRepository.getOrders(userId);
+
     }
 }

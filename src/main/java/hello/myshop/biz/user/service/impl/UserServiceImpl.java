@@ -5,9 +5,11 @@ import hello.myshop.biz.user.dto.UserRequest;
 import hello.myshop.biz.user.dto.UserResponse;
 import hello.myshop.biz.user.entity.User;
 import hello.myshop.biz.user.repository.jpa.UserJpaRepository;
+import hello.myshop.biz.user.repository.query.UserQueryRepository;
 import hello.myshop.biz.user.service.UserService;
 import hello.myshop.core.response.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserJpaRepository userJpaRepository;
     private final UserConvertor userConvertor;
+
+    private final UserQueryRepository userQueryRepository;
 
     @Override
     public long register(UserRequest userRequest) {
@@ -41,5 +45,10 @@ public class UserServiceImpl implements UserService {
         );
         user.update(userRequest);
         return null;
+    }
+
+    @Override
+    public UserResponse.ListResponse getUsers(String srchTyp, String srchTxt, Pageable pageable) {
+        return userQueryRepository.getUsers(srchTyp, srchTxt, pageable);
     }
 }

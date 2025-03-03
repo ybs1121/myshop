@@ -3,6 +3,7 @@ package hello.myshop.biz.order.service;
 import hello.myshop.biz.cartitem.repository.CartItemJpaRepository;
 import hello.myshop.biz.order.common.constant.OrderStatus;
 import hello.myshop.biz.order.dto.OrderItemRequest;
+import hello.myshop.biz.order.dto.OrderItemResponse;
 import hello.myshop.biz.order.dto.OrderRequest;
 import hello.myshop.biz.order.dto.OrderResponse;
 import hello.myshop.biz.order.entity.Orders;
@@ -18,6 +19,7 @@ import hello.myshop.biz.user.dto.UserRequest;
 import hello.myshop.biz.user.service.UserService;
 import hello.myshop.core.response.CustomException;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,6 +155,34 @@ class OrdersServiceIntegrationTest {
         Assertions.assertThat(orders.getCnt()).isEqualTo(1);
         Assertions.assertThat(orders.getOrderResponseList().size()).isEqualTo(1);
 
+    }
+
+    @Test
+    void 주문조회_테스트_V2() {
+        // Given
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setUserId(userId);
+        List<OrderItemRequest> orderItemRequestList = new ArrayList<>();
+        OrderItemRequest orderItemRequest = new OrderItemRequest();
+        orderItemRequest.setProductId(productId1);
+        orderItemRequest.setQuantity(1);
+        orderItemRequestList.add(orderItemRequest);
+        orderRequest.setOrderItemRequestList(orderItemRequestList);
+        long order = orderService.order(orderRequest);
+
+        //When
+        OrderItemResponse.ListResponse orders = orderService.getOrdersV2(orderRequest.getUserId());
+
+        //Then
+
+        Assertions.assertThat(orders.getCnt()).isEqualTo(1);
+        Assertions.assertThat(orders.getOrderItems())
+                .isNotEmpty()
+                .hasSize(1)
+                .extracting("orderId", "quantity", "name")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple(order, 1, "TV")
+                );
 
     }
 }

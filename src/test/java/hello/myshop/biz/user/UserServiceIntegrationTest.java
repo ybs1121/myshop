@@ -5,12 +5,16 @@ import hello.myshop.biz.user.dto.UserRequest;
 import hello.myshop.biz.user.dto.UserResponse;
 import hello.myshop.biz.user.entity.User;
 import hello.myshop.biz.user.repository.jpa.UserJpaRepository;
+import hello.myshop.biz.user.repository.query.UserQueryRepository;
 import hello.myshop.biz.user.service.UserService;
 import hello.myshop.core.response.CustomException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +31,9 @@ public class UserServiceIntegrationTest {
 
     @Autowired
     private UserJpaRepository userRepository;
+
+    @Autowired
+    private UserQueryRepository userQueryRepository;
 
     @Test
     public void registerUser_SavesToDatabase() {
@@ -94,5 +101,25 @@ public class UserServiceIntegrationTest {
         // Then
 
         assertEquals("USER0001", exception.getCode());
+    }
+
+    @Test
+    void 사용자목록_조회_사용자이름으로_조회한다() {
+        // Given
+        UserRequest userRequest = new UserRequest(1L, "testuser", "test@example.com", "password123", Role.ADMIN);
+        Long userId = userService.register(userRequest);
+        //When
+        UserResponse.ListResponse users = userService.getUsers("username", "test", PageRequest.of(0, 10));
+
+        //Then
+        Assertions.assertThat(users.getCnt()).isEqualTo(1);
+        Assertions.assertThat(users.getPage()).isEqualTo(0);
+        Assertions.assertThat(users.getSize()).isEqualTo(10);
+        Assertions.assertThat(users.getUsers())
+                .isNotEmpty()
+                .hasSize(1)
+                .extracting(
+                        "username"
+                ).containsExactlyInAnyOrder("testuser");
     }
 }
